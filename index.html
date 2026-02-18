@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Qwili WhatsApp Demo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #e5ddd5;
+    }
+
+    .phone {
+      max-width: 400px;
+      margin: auto;
+      background: #ffffff;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid #ccc;
+    }
+
+    .header {
+      background: #075E54;
+      color: white;
+      padding: 15px;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .chat {
+      flex: 1;
+      padding: 10px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .message {
+      max-width: 80%;
+      padding: 10px;
+      margin: 8px 0;
+      border-radius: 10px;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    .bot {
+      background: #f1f0f0;
+      align-self: flex-start;
+    }
+
+    .user {
+      background: #dcf8c6;
+      align-self: flex-end;
+    }
+
+    .input-area {
+      display: flex;
+      padding: 10px;
+      border-top: 1px solid #ddd;
+    }
+
+    input {
+      flex: 1;
+      padding: 10px;
+      border-radius: 20px;
+      border: 1px solid #ccc;
+      outline: none;
+    }
+
+    button {
+      margin-left: 8px;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 20px;
+      background: #075E54;
+      color: white;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="phone">
+
+  <div class="header">
+    Qwili Support
+  </div>
+
+  <div class="chat" id="chat">
+    <div class="message bot">
+      Hello 👋 Welcome to Qwili.<br><br>
+      Please type START to begin or INFO to learn more.
+    </div>
+  </div>
+
+  <div class="input-area">
+    <input type="text" id="userInput" placeholder="Type a message...">
+    <button onclick="sendMessage()">Send</button>
+  </div>
+
+</div>
+
+<script>
+
+let step = 0;
+let userData = {};
+
+function sendMessage() {
+  const input = document.getElementById("userInput");
+  const chat = document.getElementById("chat");
+  const text = input.value.trim();
+
+  if (!text) return;
+
+  addMessage(text, "user");
+  input.value = "";
+
+  setTimeout(() => processMessage(text), 500);
+}
+
+function addMessage(text, sender) {
+  const chat = document.getElementById("chat");
+  const msg = document.createElement("div");
+  msg.className = "message " + sender;
+  msg.innerHTML = text;
+  chat.appendChild(msg);
+  chat.scrollTop = chat.scrollHeight;
+}
+
+function processMessage(text) {
+  text = text.toUpperCase();
+
+  if (text === "INFO") {
+    addMessage(
+      "With Qwili you can:<br><br>" +
+      "• Receive R500 to start<br>" +
+      "• Sell groceries or essential services<br>" +
+      "• Earn commission on every sale<br><br>" +
+      "Type START to continue.",
+      "bot"
+    );
+  }
+
+  else if (text === "START") {
+    step = 1;
+    addMessage(
+      "Please send your Full Name.",
+      "bot"
+    );
+  }
+
+  else if (step === 1) {
+    userData.name = text;
+    step = 2;
+    addMessage("Please send your Email Address.", "bot");
+  }
+
+  else if (step === 2) {
+    userData.email = text;
+    step = 3;
+    addMessage(
+      "If someone invited you, please enter their referral code now.<br><br>" +
+      "If not, type SKIP.",
+      "bot"
+    );
+  }
+
+  else if (step === 3) {
+    if (text !== "SKIP") {
+      userData.referral = text;
+    }
+    step = 4;
+
+    addMessage(
+      "Thank you for registering.<br><br>" +
+      "Please download the Qwili app here:<br>" +
+      "[Download Link]<br><br>" +
+      "Once installed, type DONE.",
+      "bot"
+    );
+  }
+
+  else if (text === "DONE") {
+    step = 5;
+    addMessage(
+      "Your R500 starter capital will be loaded within 10 minutes.<br><br>" +
+      "Type READY to make your first sale.",
+      "bot"
+    );
+  }
+
+  else if (text === "READY") {
+    step = 6;
+    addMessage(
+      "To complete your first transaction:<br><br>" +
+      "• Ask someone nearby if they would like groceries or essential services.<br>" +
+      "• Enter their details in the Qwili app.<br>" +
+      "• Confirm the transaction.<br>" +
+      "• Complete the payment.<br><br>" +
+      "You earn commission on every successful transaction.",
+      "bot"
+    );
+
+    setTimeout(() => {
+      addMessage(
+        "You are now officially a Qwili Merchant 💼<br><br>" +
+        "If you need assistance at any time, type HELP.<br><br>" +
+        "Thank you for choosing Qwili.",
+        "bot"
+      );
+    }, 1500);
+  }
+
+  else if (text === "HELP") {
+    addMessage("A support agent will assist you shortly.", "bot");
+  }
+
+  else {
+    addMessage("Please type START or INFO to continue.", "bot");
+  }
+}
+
+</script>
+
+</body>
+</html>
