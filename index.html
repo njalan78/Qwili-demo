@@ -93,7 +93,7 @@
   <div class="chat" id="chat">
     <div class="message bot">
       Hello 👋 Welcome to Qwili.<br><br>
-      Please type START to begin or INFO to learn more.
+      Type START to begin or INFO to learn more.
     </div>
   </div>
 
@@ -107,19 +107,16 @@
 <script>
 
 let step = 0;
-let userData = {};
 
 function sendMessage() {
   const input = document.getElementById("userInput");
-  const chat = document.getElementById("chat");
   const text = input.value.trim();
-
   if (!text) return;
 
   addMessage(text, "user");
   input.value = "";
 
-  setTimeout(() => processMessage(text), 500);
+  setTimeout(() => processMessage(text), 400);
 }
 
 function addMessage(text, sender) {
@@ -132,95 +129,105 @@ function addMessage(text, sender) {
 }
 
 function processMessage(text) {
-  text = text.toUpperCase();
+  const upper = text.toUpperCase();
 
-  if (text === "INFO") {
-    addMessage(
-      "With Qwili you can:<br><br>" +
-      "• Receive R500 to start<br>" +
-      "• Sell groceries or essential services<br>" +
-      "• Earn commission on every sale<br><br>" +
-      "Type START to continue.",
-      "bot"
-    );
-  }
-
-  else if (text === "START") {
+  // STEP 1
+  if (upper === "START") {
     step = 1;
-    addMessage(
-      "Please send your Full Name.",
-      "bot"
-    );
+    addMessage("Please enter your Full Name.", "bot");
   }
 
+  // STEP 2
   else if (step === 1) {
-    userData.name = text;
     step = 2;
-    addMessage("Please send your Email Address.", "bot");
+    addMessage("Please enter your Email Address.", "bot");
   }
 
+  // STEP 3 - DOWNLOAD
   else if (step === 2) {
-    userData.email = text;
     step = 3;
     addMessage(
-      "If someone invited you, please enter their referral code now.<br><br>" +
-      "If not, type SKIP.",
+      "Download the Qwili app:<br>" +
+      "https://play.google.com/<br><br>" +
+      "Type DONE once installed.",
       "bot"
     );
   }
 
-  else if (step === 3) {
-    if (text !== "SKIP") {
-      userData.referral = text;
-    }
+  // STEP 4 - APP STEPS
+  else if (upper === "DONE" && step === 3) {
     step = 4;
-
     addMessage(
-      "Thank you for registering.<br><br>" +
-      "Please download the Qwili app here:<br>" +
-      "[Download Link]<br><br>" +
-      "Once installed, type DONE.",
+      "Steps inside the Qwili app:<br><br>" +
+      "• Register your email and password<br>" +
+      "• Enter your phone number<br>" +
+      "• Add any referral code<br>" +
+      "• Enter your card details<br><br>" +
+      "If you completed all steps, type DONE.",
       "bot"
     );
   }
 
-  else if (text === "DONE") {
+  // STEP 5 - R500 MESSAGE
+  else if (upper === "DONE" && step === 4) {
     step = 5;
     addMessage(
+      "Registration complete ✅<br><br>" +
       "Your R500 starter capital will be loaded within 10 minutes.<br><br>" +
       "Type READY to make your first sale.",
       "bot"
     );
   }
 
-  else if (text === "READY") {
+  // STEP 6 - FIRST SALE
+  else if (upper === "READY") {
     step = 6;
     addMessage(
       "To complete your first transaction:<br><br>" +
-      "• Ask someone nearby if they would like groceries or essential services.<br>" +
-      "• Enter their details in the Qwili app.<br>" +
-      "• Confirm the transaction.<br>" +
-      "• Complete the payment.<br><br>" +
-      "You earn commission on every successful transaction.",
+      "• Ask someone nearby if they need groceries or essential services.<br>" +
+      "• Enter details in the app.<br>" +
+      "• Confirm transaction.<br>" +
+      "• Complete payment.<br><br>" +
+      "You earn commission instantly.",
       "bot"
     );
 
     setTimeout(() => {
       addMessage(
         "You are now officially a Qwili Merchant 💼<br><br>" +
-        "If you need assistance at any time, type HELP.<br><br>" +
+        "Type HELP anytime for assistance.<br><br>" +
         "Thank you for choosing Qwili.",
         "bot"
       );
-    }, 1500);
+    }, 1200);
   }
 
-  else if (text === "HELP") {
-    addMessage("A support agent will assist you shortly.", "bot");
+  // STEP 7 - HELP MENU
+  else if (upper === "HELP") {
+    addMessage(
+      "What do you need help with?<br><br>" +
+      "1 - Download App<br>" +
+      "2 - Registration<br>" +
+      "3 - First Sale<br>" +
+      "4 - Payments<br>" +
+      "5 - Referral System",
+      "bot"
+    );
+  }
+
+  // STEP 8 - VIDEO SUPPORT
+  else if (["1","2","3","4","5"].includes(upper)) {
+    addMessage(
+      "Support Videos:<br>" +
+      "https://www.youtube.com/@QwiliAfrica/videos<br><br>" +
+      "If you have further doubts, type HELP and our agent will contact you shortly.<br><br>" +
+      "Thank you.",
+      "bot"
+    );
   }
 
   else {
-    addMessage("Please type START or INFO to continue.", "bot");
+    addMessage("Please type START to begin.", "bot");
   }
 }
 
