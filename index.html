@@ -131,19 +131,27 @@ function addMessage(text, sender) {
 function processMessage(text) {
   const upper = text.toUpperCase();
 
-  // STEP 1
-  if (upper === "START") {
+  if (upper === "INFO") {
+    addMessage(
+      "With Qwili you can:<br><br>" +
+      "• Receive R500 to start<br>" +
+      "• Sell groceries or essential services<br>" +
+      "• Earn commission on every sale<br><br>" +
+      "Type START to continue.",
+      "bot"
+    );
+  }
+
+  else if (upper === "START") {
     step = 1;
     addMessage("Please enter your Full Name.", "bot");
   }
 
-  // STEP 2
   else if (step === 1) {
     step = 2;
     addMessage("Please enter your Email Address.", "bot");
   }
 
-  // STEP 3 - DOWNLOAD
   else if (step === 2) {
     step = 3;
     addMessage(
@@ -154,21 +162,19 @@ function processMessage(text) {
     );
   }
 
-  // STEP 4 - APP STEPS
   else if (upper === "DONE" && step === 3) {
     step = 4;
     addMessage(
       "Steps inside the Qwili app:<br><br>" +
       "• Register your email and password<br>" +
       "• Enter your phone number<br>" +
-      "• Add any referral code<br>" +
+      "• Add any referral code (if available)<br>" +
       "• Enter your card details<br><br>" +
-      "If you completed all steps, type DONE.",
+      "If you completed all the steps, type DONE.",
       "bot"
     );
   }
 
-  // STEP 5 - R500 MESSAGE
   else if (upper === "DONE" && step === 4) {
     step = 5;
     addMessage(
@@ -179,7 +185,6 @@ function processMessage(text) {
     );
   }
 
-  // STEP 6 - FIRST SALE
   else if (upper === "READY") {
     step = 6;
     addMessage(
@@ -202,7 +207,6 @@ function processMessage(text) {
     }, 1200);
   }
 
-  // STEP 7 - HELP MENU
   else if (upper === "HELP") {
     addMessage(
       "What do you need help with?<br><br>" +
@@ -215,19 +219,18 @@ function processMessage(text) {
     );
   }
 
-  // STEP 8 - VIDEO SUPPORT
-  else if (["1","2","3","4","5"].includes(upper)) {
+  else if (upper === "1" || upper === "2" || upper === "3" || upper === "4" || upper === "5") {
     addMessage(
       "Support Videos:<br>" +
       "https://www.youtube.com/@QwiliAfrica/videos<br><br>" +
-      "If you have further doubts, type HELP and our agent will contact you shortly.<br><br>" +
+      "If you need further assistance, type HELP and our agent will contact you shortly.<br><br>" +
       "Thank you.",
       "bot"
     );
   }
 
   else {
-    addMessage("Please type START to begin.", "bot");
+    addMessage("Please type START, INFO, or HELP to continue.", "bot");
   }
 }
 
